@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Numerics;
+﻿using System.Numerics;
 
 namespace DSaIP1;
 
@@ -62,4 +61,79 @@ internal class DFT
         }
         return output;
     }
+
+    public static Complex[] GenerateComplexSineWave(int periods)
+    {
+        const int length = 32;
+        Complex[] signal = new Complex[length];
+
+        for (int i = 0; i < length; i++)
+        {
+            double angle = 2 * Math.PI * periods * i / length;
+            signal[i] = new Complex(Math.Sin(angle), 0.0);
+        }
+
+        return signal;
+    }
+
+    public static Complex[] GenerateComplexSquareWave(int periods)
+    {
+        const int length = 32;
+        Complex[] signal = new Complex[length];
+        int samplesPerHalfPeriod = length / (periods * 2);
+
+        for (int i = 0; i < length; i++)
+        {
+            int phase = (i / samplesPerHalfPeriod) % 2;
+            double value = phase == 0 ? 1.0 : -1.0;
+            signal[i] = new Complex(value, 0.0);
+        }
+
+        return signal;
+    }
+
+    public static Complex[] GenerateComplexUnitStep(int offset)
+    {
+        const int length = 32;
+        Complex[] signal = new Complex[length];
+
+        for (int i = 0; i < length; i++)
+        {
+            double value = i >= offset ? 1.0 : 0.0;
+            signal[i] = new Complex(value, 0.0);
+        }
+
+        return signal;
+    }
+
+    public static Complex[] ZeroDCComponent(Complex[] spectrum)
+    {
+        Complex[] modified = (Complex[])spectrum.Clone();
+        modified[0] = Complex.Zero;
+        return modified;
+    }
+
+    public static Complex[] ZeroFirstTwoHarmonics(Complex[] spectrum)
+    {
+        Complex[] modified = (Complex[])spectrum.Clone();
+        if (modified.Length > 1) modified[1] = Complex.Zero;
+        if (modified.Length > 2) modified[2] = Complex.Zero;
+        return modified;
+    }
+
+    public static Complex[] ShiftSpectrum(Complex[] spectrum, int shift)
+    {
+        int N = spectrum.Length;
+        Complex[] shifted = new Complex[N];
+
+        for (int i = 0; i < N; i++)
+        {
+            int newPos = (i + shift) % N;
+            if (newPos < 0) newPos += N;
+            shifted[newPos] = spectrum[i];
+        }
+
+        return shifted;
+    }
+
 }
