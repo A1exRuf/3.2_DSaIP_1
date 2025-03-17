@@ -115,7 +115,7 @@ class Program
 
         foreach (var signal in signals)
         {
-            Console.WriteLine($"\n=== {signal.Name} ===");
+            Console.WriteLine($"\n\n{signal.Name}");
 
             Complex[] spectrum = DFT.ProcessDFT(signal.Signal);
 
